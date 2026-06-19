@@ -236,6 +236,13 @@ color:white;
 }
 
 
+.today .num{
+
+transform:translateY(-35px);
+
+}
+
+
 .day:hover{
 
 transform:
@@ -316,21 +323,24 @@ box-shadow:
 
 position:absolute;
 
-width:140px;
-height:140px;
+width:95px;
+height:95px;
 
 border-radius:50%;
 
 border:
-
 5px solid rgba(0,160,255,.5);
 
-top:50%;
 left:50%;
+top:auto;
+bottom:-15px;
 
-transform:translate(-50%,-50%);
+transform:
+translate(-50%,0);
 
 animation:pulse 2.5s infinite;
+
+pointer-events:none;
 
 }
 
@@ -341,7 +351,7 @@ content:"";
 
 position:absolute;
 
-inset:18px;
+inset:12px;
 
 border-radius:50%;
 
@@ -359,7 +369,7 @@ border:
 0%{
 
 transform:
-translate(-50%,-50%)
+translate(-50%,0)
 scale(.8);
 
 }
@@ -368,7 +378,7 @@ scale(.8);
 50%{
 
 transform:
-translate(-50%,-50%)
+translate(-50%,0)
 scale(1.1);
 
 }
@@ -377,7 +387,7 @@ scale(1.1);
 100%{
 
 transform:
-translate(-50%,-50%)
+translate(-50%,0)
 scale(.8);
 
 }
@@ -702,9 +712,11 @@ w.innerHTML=
 week[d.getDay()];
 
 
-
 node.appendChild(n);
 node.appendChild(w);
+
+
+let moonNode = moon(phase(d));
 
 
 
@@ -714,19 +726,21 @@ d.toDateString()
 today.toDateString()
 ){
 
-
 node.classList.add("today");
 
+moonNode.style.background =
+"var(--yellow)";
 
 let r=document.createElement("div");
 
 r.className="ring";
 
-
-node.appendChild(r);
-
+moonNode.appendChild(r);
 
 }
+
+
+node.appendChild(moonNode);
 
 
 
