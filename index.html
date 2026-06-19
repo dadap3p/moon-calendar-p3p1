@@ -9,11 +9,11 @@
 <style>
 
 :root{
-    --bg:#0b1024;
-    --blue:#0050b8;
-    --blue2:#0d63d8;
-    --white:#f5f5f5;
-    --yellow:#e8d500;
+    --bg:#081225;
+    --blue:#0058d8;
+    --blue2:#009dff;
+    --white:#ffffff;
+    --yellow:#f2d400;
 }
 
 *{
@@ -22,15 +22,13 @@
     box-sizing:border-box;
 }
 
-html,
-body{
+html,body{
     width:100%;
     height:100%;
-    overflow:hidden;
     background:var(--bg);
+    overflow:hidden;
     font-family:
-        Inter,
-        Helvetica Neue,
+        "Inter",
         Arial,
         sans-serif;
 }
@@ -39,112 +37,150 @@ body{
     position:relative;
     width:100%;
     aspect-ratio:16/9;
-    min-height:320px;
+    min-height:300px;
     overflow:hidden;
     background:var(--bg);
 }
 
-/* Holiday Banner */
+/* HOLIDAY BANNER */
 
 .event-banner{
+
     position:absolute;
-    top:15px;
-    left:15px;
 
-    padding:12px 26px;
-
-    background:
-    linear-gradient(
-        90deg,
-        #59c3ff,
-        #005cff,
-        rgba(0,0,0,.25)
-    );
-
-    color:white;
-    font-weight:700;
-    letter-spacing:1px;
+    top:18px;
+    left:18px;
 
     z-index:50;
 
-    box-shadow:
-    0 0 25px rgba(0,100,255,.45);
-}
-
-/* Persona blue band */
-
-.band{
-    position:absolute;
-
-    width:170%;
-    height:180px;
+    padding:12px 22px;
 
     background:
     linear-gradient(
         90deg,
-        #004db3,
-        #005dcf
+        #59d0ff,
+        #0066ff
     );
 
-    top:44%;
-    left:-35%;
+    font-weight:800;
 
-    transform:rotate(14deg);
+    letter-spacing:1px;
+
+    color:white;
+
+    box-shadow:
+    0 0 25px rgba(0,120,255,.4);
+}
+
+/* BLUE STRIPE */
+
+.band{
+
+    position:absolute;
+
+    width:180%;
+    height:190px;
+
+    background:
+    linear-gradient(
+        90deg,
+        #004dc4,
+        #006cff
+    );
+
+    top:46%;
+    left:-40%;
+
+    transform:
+    rotate(14deg);
 
     z-index:1;
 }
 
-/* Date Block */
+/* DATE */
 
 .month-block{
+
     position:absolute;
 
+    top:20%;
     left:5%;
-    top:22%;
 
     z-index:20;
 }
 
 .year{
-    font-size:clamp(1rem,2vw,2.5rem);
+
+    color:white;
+
     font-weight:900;
+
+    font-size:
+    clamp(
+        1rem,
+        2vw,
+        2.5rem
+    );
 }
 
 .month{
-    font-size:clamp(.8rem,1.5vw,1.4rem);
+
+    color:white;
+
+    font-size:
+    clamp(
+        .9rem,
+        1.5vw,
+        1.5rem
+    );
+
     font-weight:600;
 }
 
 .big-day{
-    font-size:clamp(6rem,15vw,16rem);
+
+    color:white;
+
     font-weight:900;
+
     line-height:.85;
+
+    font-size:
+    clamp(
+        6rem,
+        16vw,
+        18rem
+    );
+
+    text-shadow:
+    4px 4px 0 rgba(0,0,0,.15);
 }
 
-/* White timeline */
+/* TIMELINE */
 
 .timeline{
+
     position:absolute;
 
     width:90%;
+
     height:4px;
 
     background:white;
 
-    top:60%;
+    top:62%;
     left:5%;
 
-    transform:rotate(-35deg);
+    transform:
+    rotate(-35deg);
 
     z-index:3;
 }
 
-/* Day Nodes */
-
 .days{
     position:absolute;
     inset:0;
-    z-index:20;
+    z-index:10;
 }
 
 .day-node{
@@ -159,87 +195,104 @@ body{
     transition:
     transform .25s ease,
     filter .25s ease;
-
-    cursor:pointer;
 }
 
 .day-node:hover{
 
     transform:
     translate(-50%,-50%)
-    scale(1.18);
+    scale(1.25);
 
     filter:
     drop-shadow(
-        0 0 20px
-        rgba(255,255,255,.35)
+        0 0 25px
+        rgba(255,255,255,.4)
     );
 
     z-index:100;
 }
 
 .day-number{
-    font-size:clamp(2rem,5vw,5rem);
+
+    color:white;
+
     font-weight:900;
+
     line-height:1;
-    color:#ffffff;
+
     text-shadow:
-        2px 2px 0 rgba(0,0,0,.15);
+    2px 2px 0 rgba(0,0,0,.15);
+
+    font-size:
+    clamp(
+        2rem,
+        5vw,
+        5rem
+    );
 }
 
 .day-label{
-    font-size:clamp(.7rem,1vw,1.1rem);
+
+    color:white;
+
     font-weight:700;
+
     letter-spacing:4px;
-    color:#ffffff;
-}
-    .today .day-number,
-.today .day-label{
-    color:#ffffff !important;
+
+    font-size:
+    clamp(
+        .65rem,
+        1vw,
+        1rem
+    );
 }
 
-/* Moon */
+/* MOONS */
 
 .moon{
-    width:clamp(22px,4vw,60px);
-    height:clamp(22px,4vw,60px);
 
-    margin-top:10px;
+    width:
+    clamp(
+        24px,
+        4vw,
+        58px
+    );
+
+    height:
+    clamp(
+        24px,
+        4vw,
+        58px
+    );
 
     border-radius:50%;
 
-    position:relative;
-
-    overflow:hidden;
+    margin-top:10px;
 }
 
-/* Today's Moon */
+/* CURRENT DAY */
 
 .today .moon{
 
-    background:var(--yellow);
+    background:
+    var(--yellow);
 
-    border:4px solid white;
+    border:
+    4px solid white;
 
     box-shadow:
-    0 0 0 4px rgba(255,255,255,.45),
-    0 0 30px rgba(232,213,0,.8);
+    0 0 25px
+    rgba(242,212,0,.9);
 }
 
-/* Persona Rings */
+/* TARGET RINGS */
 
 .ring{
 
     position:absolute;
 
-    width:170px;
-    height:170px;
-
-    border-radius:50%;
-
-    border:
-    10px solid
-    rgba(110,180,255,.35);
+    width:180px;
+    height:180px;
 
     top:50%;
     left:50%;
@@ -247,8 +300,16 @@ body{
     transform:
     translate(-50%,-50%);
 
+    border-radius:50%;
+
+    border:
+    10px solid
+    rgba(80,180,255,.35);
+
     animation:
-    pulse 3s ease-in-out infinite;
+    pulse 3s infinite;
+
+    pointer-events:none;
 }
 
 .ring::after{
@@ -263,7 +324,7 @@ body{
 
     border:
     8px solid
-    rgba(110,180,255,.25);
+    rgba(80,180,255,.25);
 }
 
 @keyframes pulse{
@@ -295,7 +356,7 @@ body{
 <div class="widget">
 
     <div class="event-banner">
-        <span id="eventName">Ordinary Day</span>
+        <span id="eventName"></span>
     </div>
 
     <div class="band"></div>
@@ -318,11 +379,7 @@ body{
 
 <script>
 
-/* DATE */
-
 const today = new Date();
-
-/* FRENCH HOLIDAYS */
 
 const frenchHolidays = {
 
@@ -346,73 +403,41 @@ String(today.getMonth()+1)
 String(today.getDate())
 .padStart(2,"0");
 
-document.getElementById("eventName")
-.textContent =
+document.getElementById("eventName").textContent =
 frenchHolidays[holidayKey]
 ||
 "Ordinary Day";
 
-/* MONTHS */
-
-const months = [
-
-"January",
-"February",
-"March",
-"April",
-"May",
-"June",
-"July",
-"August",
-"September",
-"October",
-"November",
-"December"
-
+const months=[
+"January","February","March","April",
+"May","June","July","August",
+"September","October","November","December"
 ];
 
-const weekdays = [
-
-"SUN",
-"MON",
-"TUE",
-"WED",
-"THU",
-"FRI",
-"SAT"
-
+const weekdays=[
+"SUN","MON","TUE","WED",
+"THU","FRI","SAT"
 ];
 
-/* DATE DISPLAY */
-
-document.getElementById("year")
-.textContent =
+document.getElementById("year").textContent =
 today.getFullYear();
 
-document.getElementById("month")
-.textContent =
+document.getElementById("month").textContent =
 months[today.getMonth()];
 
-document.getElementById("bigDay")
-.textContent =
+document.getElementById("bigDay").textContent =
 today.getDate();
-
-/* MOON PHASE */
 
 function moonPhase(date){
 
     const lp = 2551443;
 
     const newMoon =
-    new Date(
-    "2000-01-06T18:14:00Z"
-    );
+    new Date("2000-01-06T18:14:00Z");
 
     return (
-    ((date-newMoon)/1000)
-    %
-    lp
-    ) / lp;
+    ((date-newMoon)/1000)%lp
+    )/lp;
 }
 
 function createMoon(phase){
@@ -420,53 +445,41 @@ function createMoon(phase){
     const moon =
     document.createElement("div");
 
-    moon.className = "moon";
+    moon.className =
+    "moon";
 
-    if(phase < .03 || phase > .97){
+    if(phase<.03||phase>.97)
+        moon.style.background="#111";
 
-        moon.style.background =
-        "#111";
-
-    }else if(phase < .22){
-
-        moon.style.background =
+    else if(phase<.22)
+        moon.style.background=
         "radial-gradient(circle at right,#fff 65%,#111 70%)";
 
-    }else if(phase < .28){
-
-        moon.style.background =
+    else if(phase<.28)
+        moon.style.background=
         "linear-gradient(90deg,#111 50%,#fff 50%)";
 
-    }else if(phase < .47){
-
-        moon.style.background =
+    else if(phase<.47)
+        moon.style.background=
         "radial-gradient(circle at left,#fff 85%,#111 100%)";
 
-    }else if(phase < .53){
+    else if(phase<.53)
+        moon.style.background="#fff";
 
-        moon.style.background =
-        "#fff";
-
-    }else if(phase < .72){
-
-        moon.style.background =
+    else if(phase<.72)
+        moon.style.background=
         "radial-gradient(circle at left,#fff 65%,#111 70%)";
 
-    }else if(phase < .78){
-
-        moon.style.background =
+    else if(phase<.78)
+        moon.style.background=
         "linear-gradient(90deg,#fff 50%,#111 50%)";
 
-    }else{
-
-        moon.style.background =
+    else
+        moon.style.background=
         "radial-gradient(circle at right,#fff 25%,#111 50%)";
-    }
 
     return moon;
 }
-
-/* DAYS */
 
 const container =
 document.getElementById("days");
@@ -474,18 +487,14 @@ document.getElementById("days");
 const start =
 new Date(today);
 
-start.setDate(
-today.getDate()-3
-);
+start.setDate(today.getDate()-3);
 
 for(let i=0;i<8;i++){
 
     const d =
     new Date(start);
 
-    d.setDate(
-    start.getDate()+i
-    );
+    d.setDate(start.getDate()+i);
 
     const node =
     document.createElement("div");
@@ -493,25 +502,19 @@ for(let i=0;i<8;i++){
     node.className =
     "day-node";
 
-    const x =
-    22 + (i*9);
-
-    const y =
-    88 - (i*10);
-
     node.style.left =
-    x + "%";
+    (20 + i*9) + "%";
 
     node.style.top =
-    y + "%";
+    (84 - i*9) + "%";
 
-    const number =
+    const num =
     document.createElement("div");
 
-    number.className =
+    num.className =
     "day-number";
 
-    number.textContent =
+    num.textContent =
     d.getDate();
 
     const label =
@@ -523,7 +526,7 @@ for(let i=0;i<8;i++){
     label.textContent =
     weekdays[d.getDay()];
 
-    node.appendChild(number);
+    node.appendChild(num);
     node.appendChild(label);
 
     if(
@@ -532,9 +535,7 @@ for(let i=0;i<8;i++){
         today.toDateString()
     ){
 
-        node.classList.add(
-        "today"
-        );
+        node.classList.add("today");
 
         const ring =
         document.createElement("div");
@@ -556,7 +557,7 @@ for(let i=0;i<8;i++){
 
         node.appendChild(
             createMoon(
-            moonPhase(d)
+                moonPhase(d)
             )
         );
     }
