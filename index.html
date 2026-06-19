@@ -1,199 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Persona 3 Calendar Rebuild</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Persona 3 Calendar</title>
 
 <style>
 :root{
   --bg:#0b0f1c;
-  --blue:#0050c8;
-  --blue2:#007dff;
-  --white:#fff;
-  --yellow:#ffd400;
+  --blue:#0a4cc9;
+  --blue2:#00a2ff;
+  --accent:#ffd400;
+  --white:#ffffff;
 }
 
 /* RESET */
 *{margin:0;padding:0;box-sizing:border-box;}
-html,body{
-  width:100%;
-  height:100%;
+body{
+  width:100vw;
+  height:100vh;
   overflow:hidden;
   background:var(--bg);
-  font-family:"Arial Black", Inter, sans-serif;
+  font-family: "Arial Black", sans-serif;
 }
 
-/* MAIN STAGE */
+/* STAGE */
 .widget{
   position:relative;
   width:100%;
-  aspect-ratio:16/9;
+  height:100%;
   overflow:hidden;
-  background:var(--bg);
 }
 
-/* PERSONA DEPTH FOG (IMPORTANT FOR LOOK) */
+/* FOG DEPTH (Persona-style layering) */
 .widget::before{
   content:"";
   position:absolute;
   inset:0;
   background:
-    radial-gradient(circle at 70% 25%, rgba(255,255,255,0.10), transparent 55%),
-    radial-gradient(circle at 25% 80%, rgba(0,120,255,0.08), transparent 60%);
+    radial-gradient(circle at 70% 20%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 20% 80%, rgba(0,140,255,.10), transparent 60%);
   z-index:0;
 }
 
-/* TOP LEFT BANNER */
+/* TOP BANNER */
 .banner{
   position:absolute;
-  top:18px;
-  left:18px;
-  z-index:30;
-  padding:10px 18px;
+  top:2vh;
+  left:2vw;
+  padding:10px 16px;
   font-weight:900;
-  letter-spacing:2px;
   color:white;
-  background:linear-gradient(90deg,#3cc7ff,#0066ff);
-  box-shadow:0 0 25px rgba(0,120,255,0.4);
+  background:linear-gradient(90deg,#3cc7ff,#0057ff);
+  letter-spacing:2px;
+  z-index:10;
+  box-shadow:0 0 20px rgba(0,120,255,.4);
 }
 
-/* DIAGONAL STRIPE (MAIN PERSONA PLANE) */
+/* DIAGONAL STRIPE */
 .band{
   position:absolute;
-  width:260%;
-  height:160px;
-  top:50%;
-  left:-70%;
-  transform:rotate(18deg) skewX(-14deg);
+  width:200%;
+  height:14vh;
+  top:52%;
+  left:-40%;
+  transform:rotate(18deg);
   background:linear-gradient(90deg,var(--blue),var(--blue2));
   z-index:1;
+  opacity:.9;
 }
 
-/* SECONDARY STRIPE */
-.band2{
-  position:absolute;
-  width:240%;
-  height:90px;
-  top:62%;
-  left:-60%;
-  transform:rotate(18deg) skewX(-14deg);
-  background:#002a66;
-  opacity:.7;
-  z-index:1;
-}
-
-/* DATE BLOCK (HUGE UI MASS LIKE PERSONA) */
+/* DATE BLOCK */
 .date{
   position:absolute;
+  top:18%;
   left:6%;
-  top:20%;
   z-index:10;
   color:white;
 }
 
-.year{
-  font-size:clamp(1.2rem,3vw,3rem);
-  font-weight:900;
-}
+.year{font-size:clamp(1rem,2.5vw,2.5rem); font-weight:900;}
+.month{font-size:clamp(.9rem,2vw,1.3rem); opacity:.85;}
+.big{font-size:clamp(5rem,12vw,14rem); line-height:.8;}
 
-.month{
-  font-size:clamp(1rem,2vw,1.6rem);
-  opacity:.9;
-}
-
-.big{
-  font-size:clamp(7rem,16vw,18rem);
-  font-weight:900;
-  line-height:.8;
-}
-
-/* DIAGONAL TIMELINE (CLEAN GRID ALIGNMENT) */
+/* DIAGONAL GUIDE LINE */
 .line{
   position:absolute;
-  width:120%;
-  height:3px;
-  top:58%;
-  left:-10%;
+  width:140%;
+  height:2px;
   background:white;
-  transform:rotate(-35deg);
-  z-index:5;
-  opacity:.9;
+  top:55%;
+  left:-20%;
+  transform:rotate(-32deg);
+  opacity:.85;
+  z-index:2;
 }
 
-/* DAYS SYSTEM */
+/* DAYS */
 .days{
   position:absolute;
   inset:0;
-  z-index:10;
+  z-index:5;
 }
 
+/* Each node */
 .day{
   position:absolute;
-  transform:translate(-50%,-50%);
   text-align:center;
+  transform:translate(-50%,-50%);
   color:white;
-  transition:.2s ease;
+  transition:.25s ease;
 }
 
 .day:hover{
-  transform:translate(-50%,-50%) scale(1.22);
-  z-index:50;
+  transform:translate(-50%,-50%) scale(1.15);
 }
 
+/* number */
 .num{
-  font-size:clamp(2.5rem,4vw,4.5rem);
+  font-size:clamp(2rem,3.5vw,4rem);
   font-weight:900;
 }
 
 .week{
-  font-size:.75rem;
-  letter-spacing:4px;
-  opacity:.85;
+  font-size:.7rem;
+  letter-spacing:3px;
+  opacity:.8;
 }
 
-/* MOON (CLEAN PERSONA STYLE) */
+/* MOON */
 .moon{
-  width:clamp(34px,4vw,58px);
-  height:clamp(34px,4vw,58px);
+  width:clamp(28px,3vw,52px);
+  height:clamp(28px,3vw,52px);
   border-radius:50%;
   margin:8px auto 0;
-  background:white;
-  box-shadow:0 0 10px rgba(255,255,255,.2);
+  background:conic-gradient(from 180deg,#111 0 50%, #fff 50% 100%);
+  box-shadow:0 0 10px rgba(255,255,255,.15);
 }
 
-/* TODAY MOON (YELLOW FOCUS) */
+/* TODAY MOON = FULL YELLOW GLOW */
 .today .moon{
-  background:var(--yellow);
-  border:4px solid white;
-  box-shadow:0 0 20px var(--yellow), 0 0 45px rgba(255,212,0,.5);
+  background:var(--accent);
+  box-shadow:
+    0 0 18px var(--accent),
+    0 0 45px rgba(255,212,0,.45);
+  border:3px solid white;
 }
 
-/* TARGET RING */
+/* TARGET RING (anchored properly) */
 .ring{
   position:absolute;
-  width:150px;
-  height:150px;
+  inset:-18px;
   border-radius:50%;
-  border:6px solid rgba(0,160,255,.5);
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  animation:pulse 2.8s infinite;
+  border:3px solid rgba(0,160,255,.55);
+  animation:pulse 2.5s infinite;
+  pointer-events:none;
 }
 
 .ring::after{
   content:"";
   position:absolute;
-  inset:16px;
+  inset:10px;
   border-radius:50%;
-  border:5px solid rgba(0,160,255,.25);
+  border:2px solid rgba(0,160,255,.25);
 }
 
 @keyframes pulse{
-  0%{transform:translate(-50%,-50%) scale(.85);}
-  50%{transform:translate(-50%,-50%) scale(1.1);}
-  100%{transform:translate(-50%,-50%) scale(.85);}
+  0%{transform:scale(.9);}
+  50%{transform:scale(1.1);}
+  100%{transform:scale(.9);}
 }
 </style>
 </head>
@@ -205,7 +180,7 @@ html,body{
   <div class="banner" id="holiday">DAY OFF</div>
 
   <div class="band"></div>
-  <div class="band2"></div>
+  <div class="line"></div>
 
   <div class="date">
     <div class="year" id="year"></div>
@@ -213,7 +188,6 @@ html,body{
     <div class="big" id="big"></div>
   </div>
 
-  <div class="line"></div>
   <div class="days" id="days"></div>
 
 </div>
@@ -222,79 +196,35 @@ html,body{
 
 const today = new Date();
 
-/* -------------------------
-   TEXT
---------------------------*/
-const months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const week=["SUN","MON","TUE","WED","THU","FRI","SAT"];
 
 document.getElementById("year").textContent=today.getFullYear();
 document.getElementById("month").textContent=months[today.getMonth()];
 document.getElementById("big").textContent=today.getDate();
 
-/* -------------------------
-   FRENCH HOLIDAYS (COMPLETE)
---------------------------*/
-function easter(y){
-  let a=y%19,b=Math.floor(y/100),c=y%100;
-  let d=Math.floor(b/4),e=b%4;
-  let f=Math.floor((b+8)/25);
-  let g=Math.floor((b-f+1)/3);
-  let h=(19*a+b-d-g+15)%30;
-  let i=Math.floor(c/4),k=c%4;
-  let l=(32+2*e+2*i-h-k)%7;
-  let m=Math.floor((a+11*h+22*l)/451);
-  let month=Math.floor((h+l-7*m+114)/31);
-  let day=((h+l-7*m+114)%31)+1;
-  return new Date(y,month-1,day);
-}
+/* SIMPLE HOLIDAY MAP */
+const holidays={
+  "07-14":"Bastille Day",
+  "01-01":"New Year",
+  "12-25":"Christmas"
+};
 
 function key(d){
   return String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 }
 
-const easterDate=easter(today.getFullYear());
-
-const holidays={
-  "01-01":"🇫🇷 New Year",
-  "05-01":"🇫🇷 Labour Day",
-  "05-08":"🇫🇷 Victory Day",
-  "07-14":"🇫🇷 Bastille Day",
-  "08-15":"🇫🇷 Assumption",
-  "11-01":"🇫🇷 All Saints",
-  "11-11":"🇫🇷 Armistice",
-  "12-25":"🇫🇷 Christmas",
-
-  [key(easterDate)]:"🐣 Easter",
-  [key(new Date(easterDate.getTime()+86400000))]:"🐣 Easter Monday"
-};
-
 document.getElementById("holiday").textContent =
 holidays[key(today)] || "DAY OFF";
 
-/* -------------------------
-   MOON PHASE (ACCURATE BASE)
---------------------------*/
-function moonPhase(d){
-  const n=new Date("2000-01-06T18:14:00Z");
-  const days=(d-n)/86400000;
-  return (days%29.53)/29.53;
-}
-
-function moon(p){
+/* MOON */
+function moon(){
   const m=document.createElement("div");
   m.className="moon";
-
-  if(p<.03||p>.97) m.style.background="#111";
-  else if(p<.5) m.style.background="linear-gradient(90deg,#111 50%,#fff 50%)";
-  else m.style.background="linear-gradient(90deg,#fff 50%,#111 50%)";
-
   return m;
 }
 
-/* -------------------------
-   PERFECT DIAGONAL GRID
---------------------------*/
+/* LAYOUT ENGINE (clean diagonal scaling) */
 const container=document.getElementById("days");
 const start=new Date(today);
 start.setDate(today.getDate()-3);
@@ -307,16 +237,21 @@ for(let i=0;i<8;i++){
   const node=document.createElement("div");
   node.className="day";
 
-  /* CLEAN LINEAR VECTOR (KEY FIX FOR VISUAL MATCH) */
-  node.style.left = (22 + i*8) + "%";
-  node.style.top  = (78 - i*8) + "%";
+  /* RESPONSIVE DIAGONAL VECTOR */
+  const step = 7; // percent spacing (clean Persona diagonal)
+  node.style.left = (20 + i * step) + "%";
+  node.style.top  = (75 - i * step) + "%";
 
   node.innerHTML=`
     <div class="num">${d.getDate()}</div>
     <div class="week">${week[d.getDay()]}</div>
   `;
 
-  if(d.toDateString()===today.toDateString()){
+  const m = moon();
+  node.appendChild(m);
+
+  /* TODAY STATE */
+  if(d.toDateString() === today.toDateString()){
     node.classList.add("today");
 
     const ring=document.createElement("div");
@@ -324,7 +259,6 @@ for(let i=0;i<8;i++){
     node.appendChild(ring);
   }
 
-  node.appendChild(moon(moonPhase(d)));
   container.appendChild(node);
 }
 
