@@ -3,16 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Moon Calendar Widget</title>
+
+<title>Persona Moon Calendar</title>
 
 <style>
+
 :root{
     --bg:#0b1024;
     --blue:#0050b8;
-    --blue-light:#4b9cff;
-    --white:#f8f8f8;
+    --blue2:#0d63d8;
+    --white:#f5f5f5;
     --yellow:#e8d500;
-    --shadow:#07111f;
 }
 
 *{
@@ -21,149 +22,263 @@
     box-sizing:border-box;
 }
 
+html,
 body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
     background:var(--bg);
-    color:white;
     font-family:
         Inter,
         Helvetica Neue,
         Arial,
         sans-serif;
-    overflow:hidden;
 }
 
 .widget{
     position:relative;
-    width:100vw;
-    height:100vh;
-    min-height:500px;
+    width:100%;
+    aspect-ratio:16/9;
+    min-height:320px;
+    overflow:hidden;
+    background:var(--bg);
 }
 
-/* Persona blue strip */
+/* Holiday Banner */
+
+.event-banner{
+    position:absolute;
+    top:15px;
+    left:15px;
+
+    padding:12px 26px;
+
+    background:
+    linear-gradient(
+        90deg,
+        #59c3ff,
+        #005cff,
+        rgba(0,0,0,.25)
+    );
+
+    color:white;
+    font-weight:700;
+    letter-spacing:1px;
+
+    z-index:50;
+
+    box-shadow:
+    0 0 25px rgba(0,100,255,.45);
+}
+
+/* Persona blue band */
+
 .band{
     position:absolute;
-    width:140%;
+
+    width:170%;
     height:180px;
-    background:var(--blue);
-    top:40%;
-    left:-20%;
+
+    background:
+    linear-gradient(
+        90deg,
+        #004db3,
+        #005dcf
+    );
+
+    top:44%;
+    left:-35%;
+
     transform:rotate(14deg);
+
     z-index:1;
 }
 
+/* Date Block */
+
 .month-block{
     position:absolute;
-    left:60px;
-    top:70px;
-    z-index:3;
+
+    left:5%;
+    top:22%;
+
+    z-index:20;
 }
 
 .year{
-    font-size:3rem;
-    font-weight:800;
-    line-height:1;
+    font-size:clamp(1rem,2vw,2.5rem);
+    font-weight:900;
 }
 
 .month{
-    font-size:1.4rem;
+    font-size:clamp(.8rem,1.5vw,1.4rem);
     font-weight:600;
-    opacity:.95;
 }
 
 .big-day{
-    font-size:15rem;
+    font-size:clamp(6rem,15vw,16rem);
     font-weight:900;
-    line-height:.8;
-    margin-top:10px;
+    line-height:.85;
 }
+
+/* White timeline */
 
 .timeline{
     position:absolute;
-    width:80%;
+
+    width:90%;
     height:4px;
+
     background:white;
-    top:58%;
-    left:10%;
+
+    top:60%;
+    left:5%;
+
     transform:rotate(-35deg);
-    transform-origin:center;
-    z-index:2;
+
+    z-index:3;
 }
+
+/* Day Nodes */
 
 .days{
     position:absolute;
     inset:0;
-    z-index:5;
+    z-index:20;
 }
 
 .day-node{
+
     position:absolute;
+
     text-align:center;
-    transform:translate(-50%,-50%);
+
+    transform:
+    translate(-50%,-50%);
+
+    transition:
+    transform .25s ease,
+    filter .25s ease;
+
+    cursor:pointer;
+}
+
+.day-node:hover{
+
+    transform:
+    translate(-50%,-50%)
+    scale(1.18);
+
+    filter:
+    drop-shadow(
+        0 0 20px
+        rgba(255,255,255,.35)
+    );
+
+    z-index:100;
 }
 
 .day-number{
-    font-size:4rem;
+    font-size:clamp(2rem,5vw,5rem);
     font-weight:900;
     line-height:1;
 }
 
 .day-label{
-    font-size:1rem;
-    letter-spacing:4px;
+    font-size:clamp(.7rem,1vw,1.1rem);
     font-weight:700;
+    letter-spacing:4px;
 }
+
+/* Moon */
 
 .moon{
-    width:54px;
-    height:54px;
+    width:clamp(22px,4vw,60px);
+    height:clamp(22px,4vw,60px);
+
+    margin-top:10px;
+
     border-radius:50%;
-    margin:10px auto 0;
+
     position:relative;
+
     overflow:hidden;
-    background:#fff;
-    box-shadow:
-        -10px 0 rgba(0,0,0,.25) inset;
 }
+
+/* Today's Moon */
 
 .today .moon{
+
     background:var(--yellow);
+
     border:4px solid white;
+
     box-shadow:
-        0 0 0 5px rgba(255,255,255,.4);
+    0 0 0 4px rgba(255,255,255,.45),
+    0 0 30px rgba(232,213,0,.8);
 }
 
-.today .day-number,
-.today .day-label{
-    color:white;
-}
+/* Persona Rings */
 
 .ring{
+
     position:absolute;
-    width:160px;
-    height:160px;
+
+    width:170px;
+    height:170px;
+
     border-radius:50%;
-    border:14px solid rgba(95,170,255,.35);
+
+    border:
+    10px solid
+    rgba(110,180,255,.35);
+
     top:50%;
     left:50%;
-    transform:translate(-50%,-50%);
+
+    transform:
+    translate(-50%,-50%);
+
+    animation:
+    pulse 3s ease-in-out infinite;
 }
 
 .ring::after{
+
     content:"";
+
     position:absolute;
-    inset:22px;
+
+    inset:20px;
+
     border-radius:50%;
-    border:10px solid rgba(95,170,255,.25);
+
+    border:
+    8px solid
+    rgba(110,180,255,.25);
 }
 
-.footer{
-    position:absolute;
-    bottom:15px;
-    right:20px;
-    opacity:.6;
-    font-size:.8rem;
-    z-index:10;
+@keyframes pulse{
+
+    0%{
+        transform:
+        translate(-50%,-50%)
+        scale(.9);
+    }
+
+    50%{
+        transform:
+        translate(-50%,-50%)
+        scale(1);
+    }
+
+    100%{
+        transform:
+        translate(-50%,-50%)
+        scale(.9);
+    }
 }
+
 </style>
 </head>
 
@@ -171,12 +286,20 @@ body{
 
 <div class="widget">
 
+    <div class="event-banner">
+        <span id="eventName">Ordinary Day</span>
+    </div>
+
     <div class="band"></div>
 
     <div class="month-block">
+
         <div class="year" id="year"></div>
+
         <div class="month" id="month"></div>
+
         <div class="big-day" id="bigDay"></div>
+
     </div>
 
     <div class="timeline"></div>
@@ -187,177 +310,252 @@ body{
 
 <script>
 
+/* DATE */
+
 const today = new Date();
 
+/* FRENCH HOLIDAYS */
+
+const frenchHolidays = {
+
+"01-01":"🇫🇷 New Year's Day",
+"05-01":"🇫🇷 Labour Day",
+"05-08":"🇫🇷 Victory Day",
+"07-14":"🇫🇷 Bastille Day",
+"08-15":"🇫🇷 Assumption Day",
+"11-01":"🇫🇷 All Saints' Day",
+"11-11":"🇫🇷 Armistice Day",
+"12-25":"🇫🇷 Christmas"
+
+};
+
+const holidayKey =
+String(today.getMonth()+1)
+.padStart(2,"0")
++
+"-"
++
+String(today.getDate())
+.padStart(2,"0");
+
+document.getElementById("eventName")
+.textContent =
+frenchHolidays[holidayKey]
+||
+"Ordinary Day";
+
+/* MONTHS */
+
 const months = [
-"January","February","March","April",
-"May","June","July","August",
-"September","October","November","December"
+
+"January",
+"February",
+"March",
+"April",
+"May",
+"June",
+"July",
+"August",
+"September",
+"October",
+"November",
+"December"
+
 ];
 
 const weekdays = [
-"SUN","MON","TUE","WED","THU","FRI","SAT"
+
+"SUN",
+"MON",
+"TUE",
+"WED",
+"THU",
+"FRI",
+"SAT"
+
 ];
 
-document.getElementById("year").textContent =
+/* DATE DISPLAY */
+
+document.getElementById("year")
+.textContent =
 today.getFullYear();
 
-document.getElementById("month").textContent =
+document.getElementById("month")
+.textContent =
 months[today.getMonth()];
 
-document.getElementById("bigDay").textContent =
+document.getElementById("bigDay")
+.textContent =
 today.getDate();
+
+/* MOON PHASE */
 
 function moonPhase(date){
 
     const lp = 2551443;
-    const newMoon = new Date(
-        "2000-01-06T18:14:00Z"
+
+    const newMoon =
+    new Date(
+    "2000-01-06T18:14:00Z"
     );
 
-    const phase =
-    ((date - newMoon) / 1000) % lp;
-
-    return phase / lp;
-}
-
-function moonStyle(phase){
-
-    if(phase < .03 || phase > .97){
-        return "new";
-    }
-
-    if(phase < .22){
-        return "waxing";
-    }
-
-    if(phase < .28){
-        return "first";
-    }
-
-    if(phase < .47){
-        return "gibbous";
-    }
-
-    if(phase < .53){
-        return "full";
-    }
-
-    if(phase < .72){
-        return "waning";
-    }
-
-    if(phase < .78){
-        return "last";
-    }
-
-    return "crescent";
+    return (
+    ((date-newMoon)/1000)
+    %
+    lp
+    ) / lp;
 }
 
 function createMoon(phase){
 
-    const moon = document.createElement("div");
+    const moon =
+    document.createElement("div");
+
     moon.className = "moon";
 
-    const type = moonStyle(phase);
+    if(phase < .03 || phase > .97){
 
-    switch(type){
+        moon.style.background =
+        "#111";
 
-        case "new":
-            moon.style.background="#151515";
-            break;
+    }else if(phase < .22){
 
-        case "first":
-            moon.style.background=
-            "linear-gradient(90deg,#151515 50%,#fff 50%)";
-            break;
+        moon.style.background =
+        "radial-gradient(circle at right,#fff 65%,#111 70%)";
 
-        case "last":
-            moon.style.background=
-            "linear-gradient(90deg,#fff 50%,#151515 50%)";
-            break;
+    }else if(phase < .28){
 
-        case "full":
-            moon.style.background="#fff";
-            break;
+        moon.style.background =
+        "linear-gradient(90deg,#111 50%,#fff 50%)";
 
-        case "waxing":
-            moon.style.background=
-            "radial-gradient(circle at right,#fff 65%,#151515 70%)";
-            break;
+    }else if(phase < .47){
 
-        case "waning":
-            moon.style.background=
-            "radial-gradient(circle at left,#fff 65%,#151515 70%)";
-            break;
+        moon.style.background =
+        "radial-gradient(circle at left,#fff 85%,#111 100%)";
 
-        case "gibbous":
-            moon.style.background=
-            "radial-gradient(circle at left,#fff 85%,#151515 100%)";
-            break;
+    }else if(phase < .53){
 
-        case "crescent":
-            moon.style.background=
-            "radial-gradient(circle at right,#fff 25%,#151515 50%)";
-            break;
+        moon.style.background =
+        "#fff";
+
+    }else if(phase < .72){
+
+        moon.style.background =
+        "radial-gradient(circle at left,#fff 65%,#111 70%)";
+
+    }else if(phase < .78){
+
+        moon.style.background =
+        "linear-gradient(90deg,#fff 50%,#111 50%)";
+
+    }else{
+
+        moon.style.background =
+        "radial-gradient(circle at right,#fff 25%,#111 50%)";
     }
 
     return moon;
 }
 
-const daysContainer =
+/* DAYS */
+
+const container =
 document.getElementById("days");
 
-const start = new Date(today);
-start.setDate(today.getDate() - 3);
+const start =
+new Date(today);
+
+start.setDate(
+today.getDate()-3
+);
 
 for(let i=0;i<8;i++){
 
-    const d = new Date(start);
-    d.setDate(start.getDate()+i);
+    const d =
+    new Date(start);
 
-    const node = document.createElement("div");
-    node.className = "day-node";
+    d.setDate(
+    start.getDate()+i
+    );
 
-    const x = 18 + (i * 10);
-    const y = 78 - (i * 8);
-
-    node.style.left = `${x}%`;
-    node.style.top = `${y}%`;
-
-    if(
-        d.toDateString() ===
-        today.toDateString()
-    ){
-        node.classList.add("today");
-
-        const ring =
-        document.createElement("div");
-        ring.className = "ring";
-        node.appendChild(ring);
-    }
-
-    const num =
+    const node =
     document.createElement("div");
-    num.className = "day-number";
-    num.textContent = d.getDate();
+
+    node.className =
+    "day-node";
+
+    const x =
+    22 + (i*9);
+
+    const y =
+    88 - (i*10);
+
+    node.style.left =
+    x + "%";
+
+    node.style.top =
+    y + "%";
+
+    const number =
+    document.createElement("div");
+
+    number.className =
+    "day-number";
+
+    number.textContent =
+    d.getDate();
 
     const label =
     document.createElement("div");
-    label.className = "day-label";
+
+    label.className =
+    "day-label";
+
     label.textContent =
     weekdays[d.getDay()];
 
-    node.appendChild(num);
+    node.appendChild(number);
     node.appendChild(label);
-    node.appendChild(
-        createMoon(
-            moonPhase(d)
-        )
-    );
 
-    daysContainer.appendChild(node);
+    if(
+        d.toDateString()
+        ===
+        today.toDateString()
+    ){
+
+        node.classList.add(
+        "today"
+        );
+
+        const ring =
+        document.createElement("div");
+
+        ring.className =
+        "ring";
+
+        node.appendChild(ring);
+
+        const moon =
+        document.createElement("div");
+
+        moon.className =
+        "moon";
+
+        node.appendChild(moon);
+
+    }else{
+
+        node.appendChild(
+            createMoon(
+            moonPhase(d)
+            )
+        );
+    }
+
+    container.appendChild(node);
 }
+
 </script>
 
 </body>
