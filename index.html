@@ -11,7 +11,7 @@
   --blue:#0a4cc9;
   --blue2:#00a2ff;
   --accent:#ffd400;
-  --white:#fff;
+  --white:#ffffff;
 }
 
 /* RESET */
@@ -29,45 +29,32 @@ body{
   position:relative;
   width:100%;
   height:100%;
+  overflow:hidden;
 }
 
-/* BACKGROUND DEPTH */
+/* FOG DEPTH (Persona-style layering) */
 .widget::before{
   content:"";
   position:absolute;
   inset:0;
   background:
     radial-gradient(circle at 70% 20%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 25% 80%, rgba(0,140,255,.10), transparent 60%);
+    radial-gradient(circle at 20% 80%, rgba(0,140,255,.10), transparent 60%);
+  z-index:0;
 }
 
-/* TOP LEFT DATE BLOCK (SEMI TRANSPARENT LIKE IMAGE) */
-.date{
-  position:absolute;
-  top:2vh;
-  left:2vw;
-  padding:16px 22px;
-  background:rgba(0,80,200,.55);
-  backdrop-filter: blur(6px);
-  color:white;
-  z-index:10;
-  border-left:4px solid #00a2ff;
-}
-
-.year{font-size:1.2rem;font-weight:900;}
-.month{font-size:.9rem;opacity:.85;}
-.big{font-size:4rem;line-height:.9;font-weight:900;}
-
-/* HOLIDAY LABEL */
+/* TOP BANNER */
 .banner{
   position:absolute;
   top:2vh;
-  right:2vw;
-  padding:10px 14px;
-  background:rgba(0,140,255,.3);
-  color:white;
+  left:2vw;
+  padding:10px 16px;
   font-weight:900;
+  color:white;
+  background:linear-gradient(90deg,#3cc7ff,#0057ff);
   letter-spacing:2px;
+  z-index:10;
+  box-shadow:0 0 20px rgba(0,120,255,.4);
 }
 
 /* DIAGONAL STRIPE */
@@ -79,10 +66,24 @@ body{
   left:-40%;
   transform:rotate(18deg);
   background:linear-gradient(90deg,var(--blue),var(--blue2));
-  opacity:.95;
+  z-index:1;
+  opacity:.9;
 }
 
-/* GUIDE LINE */
+/* DATE BLOCK */
+.date{
+  position:absolute;
+  top:18%;
+  left:6%;
+  z-index:10;
+  color:white;
+}
+
+.year{font-size:clamp(1rem,2.5vw,2.5rem); font-weight:900;}
+.month{font-size:clamp(.9rem,2vw,1.3rem); opacity:.85;}
+.big{font-size:clamp(5rem,12vw,14rem); line-height:.8;}
+
+/* DIAGONAL GUIDE LINE */
 .line{
   position:absolute;
   width:140%;
@@ -91,83 +92,83 @@ body{
   top:55%;
   left:-20%;
   transform:rotate(-32deg);
-  opacity:.8;
+  opacity:.85;
+  z-index:2;
 }
 
 /* DAYS */
 .days{
   position:absolute;
   inset:0;
+  z-index:5;
 }
 
-/* DAY NODE */
+/* Each node */
 .day{
   position:absolute;
-  transform:translate(-50%,-50%);
   text-align:center;
+  transform:translate(-50%,-50%);
   color:white;
+  transition:.25s ease;
 }
 
-/* TEXT */
-.num{font-size:2.5rem;font-weight:900;}
-.week{font-size:.7rem;opacity:.8;letter-spacing:2px;}
-
-/* MOON WRAPPER (IMPORTANT FOR PERFECT CENTERING) */
-.moon-wrap{
-  position:relative;
-  width:fit-content;
-  margin:8px auto 0;
+.day:hover{
+  transform:translate(-50%,-50%) scale(1.15);
 }
 
-/* MOON BASE */
+/* number */
+.num{
+  font-size:clamp(2rem,3.5vw,4rem);
+  font-weight:900;
+}
+
+.week{
+  font-size:.7rem;
+  letter-spacing:3px;
+  opacity:.8;
+}
+
+/* MOON */
 .moon{
-  width:44px;
-  height:44px;
+  width:clamp(28px,3vw,52px);
+  height:clamp(28px,3vw,52px);
   border-radius:50%;
-  position:relative;
-  z-index:2;
-  background:#111;
-  overflow:hidden;
+  margin:8px auto 0;
+  background:conic-gradient(from 180deg,#111 0 50%, #fff 50% 100%);
+  box-shadow:0 0 10px rgba(255,255,255,.15);
 }
 
-/* REALISTIC PHASE SHADING */
-.moon::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:conic-gradient(from 180deg,
-    #fff 0deg,
-    #fff var(--phase, 50%),
-    #111 var(--phase, 50%),
-    #111 360deg
-  );
-  border-radius:50%;
-}
-
-/* TODAY = FULL YELLOW PERSONA STYLE */
+/* TODAY MOON = FULL YELLOW GLOW */
 .today .moon{
   background:var(--accent);
-  box-shadow:0 0 18px var(--accent), 0 0 50px rgba(255,212,0,.45);
+  box-shadow:
+    0 0 18px var(--accent),
+    0 0 45px rgba(255,212,0,.45);
+  border:3px solid white;
 }
 
-/* RING CENTERED EXACTLY ON MOON */
+/* TARGET RING (anchored properly) */
 .ring{
   position:absolute;
-  width:160%;
-  height:160%;
+  inset:-18px;
   border-radius:50%;
-  border:3px solid rgba(0,160,255,.6);
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  animation:pulse 2.4s infinite;
+  border:3px solid rgba(0,160,255,.55);
+  animation:pulse 2.5s infinite;
   pointer-events:none;
 }
 
+.ring::after{
+  content:"";
+  position:absolute;
+  inset:10px;
+  border-radius:50%;
+  border:2px solid rgba(0,160,255,.25);
+}
+
 @keyframes pulse{
-  0%{transform:translate(-50%,-50%) scale(.9);}
-  50%{transform:translate(-50%,-50%) scale(1.1);}
-  100%{transform:translate(-50%,-50%) scale(.9);}
+  0%{transform:scale(.9);}
+  50%{transform:scale(1.1);}
+  100%{transform:scale(.9);}
 }
 </style>
 </head>
@@ -176,25 +177,25 @@ body{
 
 <div class="widget">
 
+  <div class="banner" id="holiday">DAY OFF</div>
+
+  <div class="band"></div>
+  <div class="line"></div>
+
   <div class="date">
     <div class="year" id="year"></div>
     <div class="month" id="month"></div>
     <div class="big" id="big"></div>
   </div>
 
-  <div class="banner" id="holiday">DAY OFF</div>
-
-  <div class="band"></div>
-  <div class="line"></div>
-
   <div class="days" id="days"></div>
+
 </div>
 
 <script>
 
 const today = new Date();
 
-/* ---------- DATE UI ---------- */
 const months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const week=["SUN","MON","TUE","WED","THU","FRI","SAT"];
 
@@ -202,59 +203,29 @@ document.getElementById("year").textContent=today.getFullYear();
 document.getElementById("month").textContent=months[today.getMonth()];
 document.getElementById("big").textContent=today.getDate();
 
-/* ---------- HOLIDAYS (FRANCE BASE) ---------- */
+/* SIMPLE HOLIDAY MAP */
+const holidays={
+  "07-14":"Bastille Day",
+  "01-01":"New Year",
+  "12-25":"Christmas"
+};
+
 function key(d){
   return String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 }
 
-const holidays={
-  "01-01":"New Year",
-  "05-01":"Labour Day",
-  "07-14":"Bastille Day",
-  "12-25":"Christmas"
-};
-
 document.getElementById("holiday").textContent =
 holidays[key(today)] || "DAY OFF";
 
-/* ---------- REAL MOON PHASE (accurate synodic model) ---------- */
-function moonPhase(date){
-  const synodic = 29.53058867;
-  const newMoon = new Date("2000-01-06T18:14:00Z");
-  const days = (date - newMoon) / 86400000;
-  return (days % synodic) / synodic; // 0..1
+/* MOON */
+function moon(){
+  const m=document.createElement("div");
+  m.className="moon";
+  return m;
 }
 
-/* convert phase → CSS fill position */
-function phaseToCSS(p){
-  // 0 new moon, 0.5 full moon
-  const illumination = Math.abs(0.5 - p) * 2;
-  return (illumination * 100) + "%";
-}
-
-/* ---------- MOON COMPONENT ---------- */
-function createMoon(date, isToday){
-  const wrap=document.createElement("div");
-  wrap.className="moon-wrap";
-
-  const moon=document.createElement("div");
-  moon.className="moon";
-
-  const phase = moonPhase(date);
-  moon.style.setProperty("--phase", phaseToCSS(phase));
-
-  wrap.appendChild(moon);
-
-  if(isToday){
-    moon.classList.add("today");
-  }
-
-  return wrap;
-}
-
-/* ---------- GRID ---------- */
+/* LAYOUT ENGINE (clean diagonal scaling) */
 const container=document.getElementById("days");
-
 const start=new Date(today);
 start.setDate(today.getDate()-3);
 
@@ -266,36 +237,30 @@ for(let i=0;i<8;i++){
   const node=document.createElement("div");
   node.className="day";
 
-  node.style.left = (20 + i*7) + "%";
-  node.style.top  = (75 - i*7) + "%";
-
-  const isToday = d.toDateString() === today.toDateString();
+  /* RESPONSIVE DIAGONAL VECTOR */
+  const step = 7; // percent spacing (clean Persona diagonal)
+  node.style.left = (20 + i * step) + "%";
+  node.style.top  = (75 - i * step) + "%";
 
   node.innerHTML=`
     <div class="num">${d.getDate()}</div>
     <div class="week">${week[d.getDay()]}</div>
   `;
 
-  const moon = createMoon(d,isToday);
-  node.appendChild(moon);
+  const m = moon();
+  node.appendChild(m);
 
-  if(isToday){
+  /* TODAY STATE */
+  if(d.toDateString() === today.toDateString()){
+    node.classList.add("today");
+
     const ring=document.createElement("div");
     ring.className="ring";
-    moon.appendChild(ring);
+    node.appendChild(ring);
   }
 
   container.appendChild(node);
 }
-
-/* ---------- AUTO UPDATE MIDNIGHT ---------- */
-function refreshAtMidnight(){
-  const now=new Date();
-  const next=new Date();
-  next.setHours(24,0,5,0);
-  setTimeout(()=>location.reload(), next-now);
-}
-refreshAtMidnight();
 
 </script>
 
