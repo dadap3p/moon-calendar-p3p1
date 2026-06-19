@@ -46,31 +46,38 @@ html,body{
 
 .event-banner{
 
-    position:absolute;
+```
+position:absolute;
 
-    top:18px;
-    left:18px;
+top:28px;
+left:20px;
 
-    z-index:50;
+z-index:50;
 
-    padding:12px 22px;
+padding:12px 28px;
 
-    background:
-    linear-gradient(
-        90deg,
-        #59d0ff,
-        #0066ff
-    );
+background:
+linear-gradient(
+    90deg,
+    #59d0ff,
+    #0066ff
+);
 
-    font-weight:800;
+color:white;
 
-    letter-spacing:1px;
+font-weight:900;
 
-    color:white;
+letter-spacing:2px;
 
-    box-shadow:
-    0 0 25px rgba(0,120,255,.4);
+transform:
+rotate(-12deg);
+
+box-shadow:
+0 0 25px rgba(0,120,255,.4);
+```
+
 }
+
 
 /* BLUE STRIPE */
 
@@ -101,13 +108,20 @@ html,body{
 
 .month-block{
 
-    position:absolute;
+```
+position:absolute;
 
-    top:20%;
-    left:5%;
+top:18%;
+left:4%;
 
-    z-index:20;
+z-index:20;
+
+transform:
+    rotate(-12deg);
+```
+
 }
+
 
 .year{
 
@@ -381,18 +395,87 @@ html,body{
 
 const today = new Date();
 
-const frenchHolidays = {
+function getFrenchHolidays(year){
 
-"01-01":"🇫🇷 New Year's Day",
-"05-01":"🇫🇷 Labour Day",
-"05-08":"🇫🇷 Victory Day",
-"07-14":"🇫🇷 Bastille Day",
-"08-15":"🇫🇷 Assumption Day",
-"11-01":"🇫🇷 All Saints' Day",
-"11-11":"🇫🇷 Armistice Day",
-"12-25":"🇫🇷 Christmas"
+```
+const frenchHolidays =
+getFrenchHolidays(
+    today.getFullYear()
+); function easter(y){
 
-};
+    const a=y%19;
+    const b=Math.floor(y/100);
+    const c=y%100;
+    const d=Math.floor(b/4);
+    const e=b%4;
+    const f=Math.floor((b+8)/25);
+    const g=Math.floor((b-f+1)/3);
+    const h=(19*a+b-d-g+15)%30;
+    const i=Math.floor(c/4);
+    const k=c%4;
+    const l=(32+2*e+2*i-h-k)%7;
+    const m=Math.floor((a+11*h+22*l)/451);
+
+    const month=
+    Math.floor((h+l-7*m+114)/31);
+
+    const day=
+    ((h+l-7*m+114)%31)+1;
+
+    return new Date(y,month-1,day);
+}
+
+const holidays={};
+
+function add(date,name){
+
+    holidays[
+        String(date.getMonth()+1)
+        .padStart(2,"0")
+        + "-"
+        +
+        String(date.getDate())
+        .padStart(2,"0")
+    ]=name;
+}
+
+const easterDate=easter(year);
+
+const easterMonday=
+new Date(easterDate);
+easterMonday.setDate(
+    easterMonday.getDate()+1
+);
+
+const ascension=
+new Date(easterDate);
+ascension.setDate(
+    ascension.getDate()+39
+);
+
+const whitMonday=
+new Date(easterDate);
+whitMonday.setDate(
+    whitMonday.getDate()+50
+);
+
+add(new Date(year,0,1),"🇫🇷 Jour de l'An");
+add(easterMonday,"🇫🇷 Lundi de Pâques");
+add(new Date(year,4,1),"🇫🇷 Fête du Travail");
+add(new Date(year,4,8),"🇫🇷 Victoire 1945");
+add(ascension,"🇫🇷 Ascension");
+add(whitMonday,"🇫🇷 Lundi de Pentecôte");
+add(new Date(year,6,14),"🇫🇷 Fête Nationale");
+add(new Date(year,7,15),"🇫🇷 Assomption");
+add(new Date(year,10,1),"🇫🇷 Toussaint");
+add(new Date(year,10,11),"🇫🇷 Armistice");
+add(new Date(year,11,25),"🇫🇷 Noël");
+
+return holidays;
+```
+
+}
+
 
 const holidayKey =
 String(today.getMonth()+1)
@@ -564,7 +647,26 @@ for(let i=0;i<8;i++){
 
     container.appendChild(node);
 }
+function refreshAtMidnight(){
 
+    const now=new Date();
+
+    const next=
+    new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate()+1,
+        0,0,1
+    );
+
+    setTimeout(()=>{
+
+        location.reload();
+
+    },next-now);
+}
+
+refreshAtMidnight();
 </script>
 
 </body>
