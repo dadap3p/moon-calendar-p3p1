@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Persona Calendar</title>
+<title>Persona 3 Calendar Rebuild</title>
 
 <style>
 :root{
-  --bg:#0f1220;
+  --bg:#0b0f1c;
   --blue:#0050c8;
-  --blue2:#007bff;
+  --blue2:#007dff;
   --white:#fff;
   --yellow:#ffd400;
 }
@@ -17,78 +17,79 @@
 /* RESET */
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{
+  width:100%;
   height:100%;
-  background:var(--bg);
   overflow:hidden;
-  font-family:"Arial Black", "Inter", sans-serif;
+  background:var(--bg);
+  font-family:"Arial Black", Inter, sans-serif;
 }
 
-/* MAIN */
+/* MAIN STAGE */
 .widget{
   position:relative;
   width:100%;
   aspect-ratio:16/9;
-  background:var(--bg);
   overflow:hidden;
+  background:var(--bg);
 }
 
-/* PERSONA UI FOG LAYER */
+/* PERSONA DEPTH FOG (IMPORTANT FOR LOOK) */
 .widget::before{
   content:"";
   position:absolute;
   inset:0;
   background:
-    radial-gradient(circle at 70% 30%, rgba(255,255,255,0.10), transparent 45%),
-    radial-gradient(circle at 20% 80%, rgba(0,120,255,0.08), transparent 50%);
+    radial-gradient(circle at 70% 25%, rgba(255,255,255,0.10), transparent 55%),
+    radial-gradient(circle at 25% 80%, rgba(0,120,255,0.08), transparent 60%);
   z-index:0;
 }
 
-/* TOP LEFT UI BLOCK (HOLIDAY) */
+/* TOP LEFT BANNER */
 .banner{
   position:absolute;
   top:18px;
   left:18px;
   z-index:30;
   padding:10px 18px;
-  background:linear-gradient(90deg,#4bd0ff,#0057ff);
-  color:white;
   font-weight:900;
   letter-spacing:2px;
-  box-shadow:0 0 25px rgba(0,140,255,.4);
+  color:white;
+  background:linear-gradient(90deg,#3cc7ff,#0066ff);
+  box-shadow:0 0 25px rgba(0,120,255,0.4);
 }
 
-/* DIAGONAL MAIN STRIPE */
+/* DIAGONAL STRIPE (MAIN PERSONA PLANE) */
 .band{
   position:absolute;
-  width:220%;
-  height:170px;
-  top:48%;
-  left:-50%;
-  transform:rotate(14deg);
+  width:260%;
+  height:160px;
+  top:50%;
+  left:-70%;
+  transform:rotate(18deg) skewX(-14deg);
   background:linear-gradient(90deg,var(--blue),var(--blue2));
   z-index:1;
 }
 
-/* SECOND DARK LAYER STRIPE */
+/* SECONDARY STRIPE */
 .band2{
   position:absolute;
-  width:200%;
+  width:240%;
   height:90px;
   top:62%;
-  left:-40%;
-  transform:rotate(14deg);
+  left:-60%;
+  transform:rotate(18deg) skewX(-14deg);
   background:#002a66;
-  opacity:.75;
+  opacity:.7;
   z-index:1;
 }
 
-/* DATE BLOCK (BIGGER + MORE “UI MASS”) */
+/* DATE BLOCK (HUGE UI MASS LIKE PERSONA) */
 .date{
   position:absolute;
   left:6%;
-  top:22%;
+  top:20%;
   z-index:10;
-  color:#fff;
+  color:white;
 }
 
 .year{
@@ -97,30 +98,30 @@ html,body{
 }
 
 .month{
-  font-size:clamp(1rem,2vw,1.8rem);
+  font-size:clamp(1rem,2vw,1.6rem);
   opacity:.9;
 }
 
 .big{
-  font-size:clamp(7rem,16vw,16rem);
-  line-height:.8;
+  font-size:clamp(7rem,16vw,18rem);
   font-weight:900;
+  line-height:.8;
 }
 
-/* DIAGONAL TIMELINE (CLEANER ALIGNMENT) */
+/* DIAGONAL TIMELINE (CLEAN GRID ALIGNMENT) */
 .line{
   position:absolute;
-  width:110%;
+  width:120%;
   height:3px;
   top:58%;
-  left:-5%;
+  left:-10%;
   background:white;
   transform:rotate(-35deg);
   z-index:5;
   opacity:.9;
 }
 
-/* DAYS */
+/* DAYS SYSTEM */
 .days{
   position:absolute;
   inset:0;
@@ -141,7 +142,7 @@ html,body{
 }
 
 .num{
-  font-size:clamp(2.5rem,4vw,4rem);
+  font-size:clamp(2.5rem,4vw,4.5rem);
   font-weight:900;
 }
 
@@ -151,24 +152,24 @@ html,body{
   opacity:.85;
 }
 
-/* MOON (FLAT PERSONA STYLE) */
+/* MOON (CLEAN PERSONA STYLE) */
 .moon{
   width:clamp(34px,4vw,58px);
   height:clamp(34px,4vw,58px);
   border-radius:50%;
   margin:8px auto 0;
-  background:#fff;
-  box-shadow:0 0 12px rgba(255,255,255,.2);
+  background:white;
+  box-shadow:0 0 10px rgba(255,255,255,.2);
 }
 
-/* CURRENT DAY MOON */
+/* TODAY MOON (YELLOW FOCUS) */
 .today .moon{
   background:var(--yellow);
-  box-shadow:0 0 18px var(--yellow), 0 0 40px rgba(255,212,0,.5);
   border:4px solid white;
+  box-shadow:0 0 20px var(--yellow), 0 0 45px rgba(255,212,0,.5);
 }
 
-/* TARGET RING (PERSONA STYLE) */
+/* TARGET RING */
 .ring{
   position:absolute;
   width:150px;
@@ -219,8 +220,11 @@ html,body{
 
 <script>
 
-const today=new Date();
+const today = new Date();
 
+/* -------------------------
+   TEXT
+--------------------------*/
 const months=["January","February","March","April","May","June","July","August","September","October","November","December"];
 const week=["SUN","MON","TUE","WED","THU","FRI","SAT"];
 
@@ -228,42 +232,84 @@ document.getElementById("year").textContent=today.getFullYear();
 document.getElementById("month").textContent=months[today.getMonth()];
 document.getElementById("big").textContent=today.getDate();
 
-/* MOON PHASE */
-function phase(d){
+/* -------------------------
+   FRENCH HOLIDAYS (COMPLETE)
+--------------------------*/
+function easter(y){
+  let a=y%19,b=Math.floor(y/100),c=y%100;
+  let d=Math.floor(b/4),e=b%4;
+  let f=Math.floor((b+8)/25);
+  let g=Math.floor((b-f+1)/3);
+  let h=(19*a+b-d-g+15)%30;
+  let i=Math.floor(c/4),k=c%4;
+  let l=(32+2*e+2*i-h-k)%7;
+  let m=Math.floor((a+11*h+22*l)/451);
+  let month=Math.floor((h+l-7*m+114)/31);
+  let day=((h+l-7*m+114)%31)+1;
+  return new Date(y,month-1,day);
+}
+
+function key(d){
+  return String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+
+const easterDate=easter(today.getFullYear());
+
+const holidays={
+  "01-01":"🇫🇷 New Year",
+  "05-01":"🇫🇷 Labour Day",
+  "05-08":"🇫🇷 Victory Day",
+  "07-14":"🇫🇷 Bastille Day",
+  "08-15":"🇫🇷 Assumption",
+  "11-01":"🇫🇷 All Saints",
+  "11-11":"🇫🇷 Armistice",
+  "12-25":"🇫🇷 Christmas",
+
+  [key(easterDate)]:"🐣 Easter",
+  [key(new Date(easterDate.getTime()+86400000))]:"🐣 Easter Monday"
+};
+
+document.getElementById("holiday").textContent =
+holidays[key(today)] || "DAY OFF";
+
+/* -------------------------
+   MOON PHASE (ACCURATE BASE)
+--------------------------*/
+function moonPhase(d){
   const n=new Date("2000-01-06T18:14:00Z");
-  const p=((d-n)/86400000)%29.53;
-  return p/29.53;
+  const days=(d-n)/86400000;
+  return (days%29.53)/29.53;
 }
 
 function moon(p){
   const m=document.createElement("div");
   m.className="moon";
 
-  if(p<.05||p>.95){
-    m.style.background="#111";
-  }else if(p<.5){
-    m.style.background="linear-gradient(90deg,#111 50%,#fff 50%)";
-  }else{
-    m.style.background="linear-gradient(90deg,#fff 50%,#111 50%)";
-  }
+  if(p<.03||p>.97) m.style.background="#111";
+  else if(p<.5) m.style.background="linear-gradient(90deg,#111 50%,#fff 50%)";
+  else m.style.background="linear-gradient(90deg,#fff 50%,#111 50%)";
 
   return m;
 }
 
-/* 8 DAY TIMELINE */
+/* -------------------------
+   PERFECT DIAGONAL GRID
+--------------------------*/
 const container=document.getElementById("days");
 const start=new Date(today);
 start.setDate(today.getDate()-3);
 
 for(let i=0;i<8;i++){
+
   const d=new Date(start);
   d.setDate(start.getDate()+i);
 
   const node=document.createElement("div");
   node.className="day";
 
-  node.style.left=(20+i*9)+"%";
-  node.style.top=(82-i*9)+"%";
+  /* CLEAN LINEAR VECTOR (KEY FIX FOR VISUAL MATCH) */
+  node.style.left = (22 + i*8) + "%";
+  node.style.top  = (78 - i*8) + "%";
 
   node.innerHTML=`
     <div class="num">${d.getDate()}</div>
@@ -278,7 +324,7 @@ for(let i=0;i<8;i++){
     node.appendChild(ring);
   }
 
-  node.appendChild(moon(phase(d)));
+  node.appendChild(moon(moonPhase(d)));
   container.appendChild(node);
 }
 
