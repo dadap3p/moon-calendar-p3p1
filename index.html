@@ -236,13 +236,6 @@ color:white;
 }
 
 
-.today .num{
-
-transform:translateY(-35px);
-
-}
-
-
 .day:hover{
 
 transform:
@@ -284,8 +277,11 @@ font-size:clamp(12px,1.5vw,22px);
 .moon{
 
 width:clamp(35px,5vw,65px);
+
 height:clamp(35px,5vw,65px);
+
 border-radius:50%;
+
 margin:auto;
 margin-top:10px;
 
@@ -320,20 +316,19 @@ box-shadow:
 
 position:absolute;
 
-width:90px;
-height:90px;
+width:140px;
+height:140px;
 
 border-radius:50%;
 
 border:
-5px solid rgba(0,160,255,.55);
 
-left:50%;
+5px solid rgba(0,160,255,.5);
+
 top:50%;
+left:50%;
 
 transform:translate(-50%,-50%);
-
-pointer-events:none;
 
 animation:pulse 2.5s infinite;
 
@@ -346,7 +341,7 @@ content:"";
 
 position:absolute;
 
-inset:12px;
+inset:18px;
 
 border-radius:50%;
 
@@ -365,7 +360,7 @@ border:
 
 transform:
 translate(-50%,-50%)
-scale(.85);
+scale(.8);
 
 }
 
@@ -383,7 +378,7 @@ scale(1.1);
 
 transform:
 translate(-50%,-50%)
-scale(.85);
+scale(.8);
 
 }
 
@@ -707,11 +702,10 @@ w.innerHTML=
 week[d.getDay()];
 
 
+
 node.appendChild(n);
 node.appendChild(w);
 
-
-let moonNode = moon(phase(d));
 
 
 if(
@@ -720,23 +714,32 @@ d.toDateString()
 today.toDateString()
 ){
 
+
 node.classList.add("today");
 
 
-// turn only today's moon yellow
-moonNode.style.background = "var(--yellow)";
-
-
-// put ring around moon
 let r=document.createElement("div");
+
 r.className="ring";
 
-moonNode.appendChild(r);
+
+node.appendChild(r);
+
 
 }
 
 
-node.appendChild(moonNode);
+
+node.appendChild(
+moon(phase(d))
+);
+
+
+
+container.appendChild(node);
+
+
+}
 
 
 
