@@ -284,11 +284,8 @@ font-size:clamp(12px,1.5vw,22px);
 .moon{
 
 width:clamp(35px,5vw,65px);
-
 height:clamp(35px,5vw,65px);
-
 border-radius:50%;
-
 margin:auto;
 margin-top:10px;
 
@@ -323,19 +320,18 @@ box-shadow:
 
 position:absolute;
 
-width:85px;
-height:85px;
+width:90px;
+height:90px;
 
 border-radius:50%;
 
 border:
-4px solid rgba(0,160,255,.65);
+5px solid rgba(0,160,255,.55);
 
 left:50%;
 top:50%;
 
-transform:
-translate(-50%,-50%);
+transform:translate(-50%,-50%);
 
 pointer-events:none;
 
@@ -727,13 +723,12 @@ today.toDateString()
 node.classList.add("today");
 
 
-// make ONLY this moon yellow
+// turn only today's moon yellow
 moonNode.style.background = "var(--yellow)";
 
 
-// ring around the moon
+// put ring around moon
 let r=document.createElement("div");
-
 r.className="ring";
 
 moonNode.appendChild(r);
