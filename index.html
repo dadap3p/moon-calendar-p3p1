@@ -66,12 +66,33 @@ html,body{ width:100%; height:100%; overflow:hidden; background:var(--bg); font-
 
 /* DAYS */
 .days{ position:absolute; inset:0; z-index:15; pointer-events:auto; }
-.day{ position:absolute; transform:translate(-50%,-50%); text-align:center; transition:.25s; color:white; width:120px; }
+.day{
+  position:absolute;
+  transform:translate(-50%,-50%);
+  text-align:center;
+  transition:.25s;
+  color:white;
+  width:120px;
+  z-index:25; /* ensure days sit above diagonal bands */
+}
 .day:hover{ transform: translate(-50%,-50%) scale(1.18); filter: drop-shadow(0 0 25px rgba(255,255,255,0.12)); z-index:50; }
 
-/* split date above and moon below */
-.topGroup{ display:flex; flex-direction:column; align-items:center; gap:6px; transform:translateY(-28px); z-index:2; pointer-events:none; }
-.bottomGroup{ display:flex; justify-content:center; align-items:center; transform:translateY(18px); z-index:1; pointer-events:none; }
+/* split date above and moon below - make them positioned so z-index works */
+.topGroup{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  transform:translateY(-28px);
+}
+.bottomGroup{
+  position:relative;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  transform:translateY(18px);
+}
 
 /* number and weekday */
 .num{ font-size:clamp(30px,4.5vw,70px); font-weight:900; line-height:.9; }
@@ -244,5 +265,37 @@ for (let i = 0; i < 7; i++){
   // top group: date number and weekday (above the diagonal)
   const topGroup = document.createElement("div");
   topGroup.className = "topGroup";
-  const n = document
+  const n = document.createElement("div");
+  n.className = "num";
+  n.textContent = d.getDate();
+  const w = document.createElement("div");
+  w.className = "week";
+  w.textContent = week[d.getDay()];
+  topGroup.appendChild(n);
+  topGroup.appendChild(w);
+
+  // bottom group: moon (below the diagonal)
+  const bottomGroup = document.createElement("div");
+  bottomGroup.className = "bottomGroup";
+  const isToday = (d.toDateString() === today.toDateString());
+  const moonEl = moon(phase(d), isToday);
+
+  if (isToday){
+    node.classList.add("today");
+    // create ring and append it inside the moon so it centers perfectly
+    const r = document.createElement("div");
+    r.className = "ring";
+    moonEl.appendChild(r);
+  }
+
+  bottomGroup.appendChild(moonEl);
+
+  node.appendChild(topGroup);
+  node.appendChild(bottomGroup);
+  container.appendChild(node);
+}
+</script>
+</body>
+</html>
+
 
