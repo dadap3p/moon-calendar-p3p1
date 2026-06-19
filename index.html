@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moon Calendar Widget</title>
+
+<style>
+:root{
+    --bg:#0b1024;
+    --blue:#0050b8;
+    --blue-light:#4b9cff;
+    --white:#f8f8f8;
+    --yellow:#e8d500;
+    --shadow:#07111f;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:var(--bg);
+    color:white;
+    font-family:
+        Inter,
+        Helvetica Neue,
+        Arial,
+        sans-serif;
+    overflow:hidden;
+}
+
+.widget{
+    position:relative;
+    width:100vw;
+    height:100vh;
+    min-height:500px;
+}
+
+/* Persona blue strip */
+.band{
+    position:absolute;
+    width:140%;
+    height:180px;
+    background:var(--blue);
+    top:40%;
+    left:-20%;
+    transform:rotate(14deg);
+    z-index:1;
+}
+
+.month-block{
+    position:absolute;
+    left:60px;
+    top:70px;
+    z-index:3;
+}
+
+.year{
+    font-size:3rem;
+    font-weight:800;
+    line-height:1;
+}
+
+.month{
+    font-size:1.4rem;
+    font-weight:600;
+    opacity:.95;
+}
+
+.big-day{
+    font-size:15rem;
+    font-weight:900;
+    line-height:.8;
+    margin-top:10px;
+}
+
+.timeline{
+    position:absolute;
+    width:80%;
+    height:4px;
+    background:white;
+    top:58%;
+    left:10%;
+    transform:rotate(-35deg);
+    transform-origin:center;
+    z-index:2;
+}
+
+.days{
+    position:absolute;
+    inset:0;
+    z-index:5;
+}
+
+.day-node{
+    position:absolute;
+    text-align:center;
+    transform:translate(-50%,-50%);
+}
+
+.day-number{
+    font-size:4rem;
+    font-weight:900;
+    line-height:1;
+}
+
+.day-label{
+    font-size:1rem;
+    letter-spacing:4px;
+    font-weight:700;
+}
+
+.moon{
+    width:54px;
+    height:54px;
+    border-radius:50%;
+    margin:10px auto 0;
+    position:relative;
+    overflow:hidden;
+    background:#fff;
+    box-shadow:
+        -10px 0 rgba(0,0,0,.25) inset;
+}
+
+.today .moon{
+    background:var(--yellow);
+    border:4px solid white;
+    box-shadow:
+        0 0 0 5px rgba(255,255,255,.4);
+}
+
+.today .day-number,
+.today .day-label{
+    color:white;
+}
+
+.ring{
+    position:absolute;
+    width:160px;
+    height:160px;
+    border-radius:50%;
+    border:14px solid rgba(95,170,255,.35);
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+}
+
+.ring::after{
+    content:"";
+    position:absolute;
+    inset:22px;
+    border-radius:50%;
+    border:10px solid rgba(95,170,255,.25);
+}
+
+.footer{
+    position:absolute;
+    bottom:15px;
+    right:20px;
+    opacity:.6;
+    font-size:.8rem;
+    z-index:10;
+}
+</style>
+</head>
+
+<body>
+
+<div class="widget">
+
+    <div class="band"></div>
+
+    <div class="month-block">
+        <div class="year" id="year"></div>
+        <div class="month" id="month"></div>
+        <div class="big-day" id="bigDay"></div>
+    </div>
+
+    <div class="timeline"></div>
+
+    <div id="days" class="days"></div>
+
+</div>
+
+<script>
+
+const today = new Date();
+
+const months = [
+"January","February","March","April",
+"May","June","July","August",
+"September","October","November","December"
+];
+
+const weekdays = [
+"SUN","MON","TUE","WED","THU","FRI","SAT"
+];
+
+document.getElementById("year").textContent =
+today.getFullYear();
+
+document.getElementById("month").textContent =
+months[today.getMonth()];
+
+document.getElementById("bigDay").textContent =
+today.getDate();
+
+function moonPhase(date){
+
+    const lp = 2551443;
+    const newMoon = new Date(
+        "2000-01-06T18:14:00Z"
+    );
+
+    const phase =
+    ((date - newMoon) / 1000) % lp;
+
+    return phase / lp;
+}
+
+function moonStyle(phase){
+
+    if(phase < .03 || phase > .97){
+        return "new";
+    }
+
+    if(phase < .22){
+        return "waxing";
+    }
+
+    if(phase < .28){
+        return "first";
+    }
+
+    if(phase < .47){
+        return "gibbous";
+    }
+
+    if(phase < .53){
+        return "full";
+    }
+
+    if(phase < .72){
+        return "waning";
+    }
+
+    if(phase < .78){
+        return "last";
+    }
+
+    return "crescent";
+}
+
+function createMoon(phase){
+
+    const moon = document.createElement("div");
+    moon.className = "moon";
+
+    const type = moonStyle(phase);
+
+    switch(type){
+
+        case "new":
+            moon.style.background="#151515";
+            break;
+
+        case "first":
+            moon.style.background=
+            "linear-gradient(90deg,#151515 50%,#fff 50%)";
+            break;
+
+        case "last":
+            moon.style.background=
+            "linear-gradient(90deg,#fff 50%,#151515 50%)";
+            break;
+
+        case "full":
+            moon.style.background="#fff";
+            break;
+
+        case "waxing":
+            moon.style.background=
+            "radial-gradient(circle at right,#fff 65%,#151515 70%)";
+            break;
+
+        case "waning":
+            moon.style.background=
+            "radial-gradient(circle at left,#fff 65%,#151515 70%)";
+            break;
+
+        case "gibbous":
+            moon.style.background=
+            "radial-gradient(circle at left,#fff 85%,#151515 100%)";
+            break;
+
+        case "crescent":
+            moon.style.background=
+            "radial-gradient(circle at right,#fff 25%,#151515 50%)";
+            break;
+    }
+
+    return moon;
+}
+
+const daysContainer =
+document.getElementById("days");
+
+const start = new Date(today);
+start.setDate(today.getDate() - 3);
+
+for(let i=0;i<8;i++){
+
+    const d = new Date(start);
+    d.setDate(start.getDate()+i);
+
+    const node = document.createElement("div");
+    node.className = "day-node";
+
+    const x = 18 + (i * 10);
+    const y = 78 - (i * 8);
+
+    node.style.left = `${x}%`;
+    node.style.top = `${y}%`;
+
+    if(
+        d.toDateString() ===
+        today.toDateString()
+    ){
+        node.classList.add("today");
+
+        const ring =
+        document.createElement("div");
+        ring.className = "ring";
+        node.appendChild(ring);
+    }
+
+    const num =
+    document.createElement("div");
+    num.className = "day-number";
+    num.textContent = d.getDate();
+
+    const label =
+    document.createElement("div");
+    label.className = "day-label";
+    label.textContent =
+    weekdays[d.getDay()];
+
+    node.appendChild(num);
+    node.appendChild(label);
+    node.appendChild(
+        createMoon(
+            moonPhase(d)
+        )
+    );
+
+    daysContainer.appendChild(node);
+}
+</script>
+
+</body>
+</html>
