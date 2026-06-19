@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Persona 3 Style Calendar</title>
 <style>
 :root{
@@ -27,25 +27,29 @@ html,body{ width:100%; height:100%; overflow:hidden; background:var(--bg); font-
   background:#171724;
 }
 
-/* TOP HOLIDAY BAR */
+/* TOP HOLIDAY BAR - semi translucent like original */
 .banner{
   position:absolute;
   top:15px;
-  left:0;
+  left:15px;
   height:60px;
-  width:260px;
-  background:linear-gradient(90deg,#38c7ff,#005cff);
+  min-width:220px;
+  padding:0 20px;
   display:flex;
   align-items:center;
-  padding-left:25px;
+  gap:12px;
   color:white;
-  font-size:clamp(18px,3vw,32px);
+  font-size:clamp(16px,2.6vw,30px);
   font-weight:900;
   letter-spacing:3px;
-  z-index:20;
-  box-shadow:0 0 25px #008cff;
+  z-index:30;
+  border-radius:6px;
+  background: linear-gradient(90deg, rgba(56,199,255,0.18), rgba(0,92,255,0.12));
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 6px 30px rgba(0,120,255,0.08), inset 0 1px 0 rgba(255,255,255,0.02);
+  backdrop-filter: blur(6px);
 }
-.banner span{ font-size:.55em; margin-left:15px; }
+.banner span{ font-size:.55em; opacity:.95; }
 
 /* DIAGONAL BANDS */
 .band{ position:absolute; width:170%; height:220px; left:-35%; top:30%; background: linear-gradient(90deg,#0046a8,#0074ff); transform:rotate(14deg); z-index:2; }
@@ -57,26 +61,32 @@ html,body{ width:100%; height:100%; overflow:hidden; background:var(--bg); font-
 .month{ font-size:clamp(18px,2vw,30px); }
 .big{ font-size:clamp(90px,18vw,260px); line-height:.75; }
 
-/* TIMELINE */
+/* TIMELINE (diagonal) */
 .line{ position:absolute; height:4px; width:95%; top:58%; left:5%; background:white; transform:rotate(-35deg); z-index:10; }
 
 /* DAYS */
-.days{ position:absolute; inset:0; z-index:15; }
-.day{ position:absolute; transform:translate(-50%,-50%); text-align:center; transition:.25s; color:white; }
-.day:hover{ transform: translate(-50%,-50%) scale(1.25); filter: drop-shadow(0 0 25px white); z-index:50; }
-.num{ font-size:clamp(35px,5vw,75px); font-weight:900; line-height:.9; }
-.week{ letter-spacing:5px; font-size:clamp(12px,1.5vw,22px); }
+.days{ position:absolute; inset:0; z-index:15; pointer-events:auto; }
+.day{ position:absolute; transform:translate(-50%,-50%); text-align:center; transition:.25s; color:white; width:120px; }
+.day:hover{ transform: translate(-50%,-50%) scale(1.18); filter: drop-shadow(0 0 25px rgba(255,255,255,0.12)); z-index:50; }
+
+/* split date above and moon below */
+.topGroup{ display:flex; flex-direction:column; align-items:center; gap:6px; transform:translateY(-28px); z-index:2; pointer-events:none; }
+.bottomGroup{ display:flex; justify-content:center; align-items:center; transform:translateY(18px); z-index:1; pointer-events:none; }
+
+/* number and weekday */
+.num{ font-size:clamp(30px,4.5vw,70px); font-weight:900; line-height:.9; }
+.week{ letter-spacing:5px; font-size:clamp(11px,1.4vw,20px); opacity:.95; }
 
 /* MOONS - moon is a positioned container so ring can be centered inside */
 .moon{
   width:clamp(35px,5vw,65px);
   height:clamp(35px,5vw,65px);
   border-radius:50%;
-  margin:auto;
-  margin-top:10px;
   background:white;
   position:relative; /* allows absolutely positioned ring to center inside */
   overflow:visible;
+  display:block;
+  margin:0 auto;
 }
 
 /* today's visual accent (border + glow) - background for lit portion is set inline by JS */
@@ -111,6 +121,12 @@ html,body{ width:100%; height:100%; overflow:hidden; background:var(--bg); font-
   0%{ transform: translate(-50%,-50%) scale(.8); }
   50%{ transform: translate(-50%,-50%) scale(1.1); }
   100%{ transform: translate(-50%,-50%) scale(.8); }
+}
+
+/* responsive tweaks */
+@media (max-width:520px){
+  .day{ width:90px; }
+  .banner{ left:10px; padding:0 14px; height:52px; }
 }
 </style>
 </head>
@@ -168,7 +184,6 @@ function holiday(date){
   const key = (date.getMonth()+1).toString().padStart(2,"0") + "-" + date.getDate().toString().padStart(2,"0");
   const e = easter(date.getFullYear());
   const movable = {
-    // Easter Monday
     [(e.getMonth()+1).toString().padStart(2,"0") + "-" + (e.getDate()+1).toString().padStart(2,"0")]: "🇫🇷 Easter Monday"
   };
   return ({
@@ -211,46 +226,23 @@ function moon(p, isToday){
   return m;
 }
 
-/* CREATE 8 DAYS (3 days before today, today, 4 days after) */
+/* CREATE 7 DAYS (3 days before today, today, 3 days after) */
 const container = document.getElementById("days");
 const start = new Date(today);
 start.setDate(today.getDate() - 3);
 
-for (let i = 0; i < 8; i++){
+for (let i = 0; i < 7; i++){
   const d = new Date(start);
   d.setDate(start.getDate() + i);
 
   const node = document.createElement("div");
   node.className = "day";
+  // positions along the diagonal; tweak left/top to match visual layout
   node.style.left = (18 + i * 10) + "%";
   node.style.top = (82 - i * 9) + "%";
 
-  const n = document.createElement("div");
-  n.className = "num";
-  n.textContent = d.getDate();
-
-  const w = document.createElement("div");
-  w.className = "week";
-  w.textContent = week[d.getDay()];
-
-  node.appendChild(n);
-  node.appendChild(w);
-
-  const isToday = (d.toDateString() === today.toDateString());
-  const moonEl = moon(phase(d), isToday);
-
-  if (isToday){
-    node.classList.add("today");
-    // create ring and append it inside the moon so it centers perfectly
-    const r = document.createElement("div");
-    r.className = "ring";
-    moonEl.appendChild(r);
-  }
-
-  node.appendChild(moonEl);
-  container.appendChild(node);
-}
-</script>
-</body>
-</html>
+  // top group: date number and weekday (above the diagonal)
+  const topGroup = document.createElement("div");
+  topGroup.className = "topGroup";
+  const n = document
 
