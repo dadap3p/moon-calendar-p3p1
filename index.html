@@ -236,23 +236,16 @@ for (let i = 0; i < 8; i++){
   node.appendChild(n);
   node.appendChild(w);
 
- const isToday = (d.toDateString() === today.toDateString());
+  const isToday = (d.toDateString() === today.toDateString());
+  const moonEl = moon(phase(d), isToday);
 
-if (isToday) {
-  // Move current date away from the timeline
-  node.style.left = (18 + i * 10 + 6) + "%"; // push right
-  node.style.top = (82 - i * 9 + 8) + "%";   // push down
-
-  node.classList.add("today");
-}
-
-const moonEl = moon(phase(d), isToday);
-
-if (isToday) {
-  const r = document.createElement("div");
-  r.className = "ring";
-  moonEl.appendChild(r);
-}
+  if (isToday){
+    node.classList.add("today");
+    // create ring and append it inside the moon so it centers perfectly
+    const r = document.createElement("div");
+    r.className = "ring";
+    moonEl.appendChild(r);
+  }
 
   node.appendChild(moonEl);
   container.appendChild(node);
@@ -260,6 +253,8 @@ if (isToday) {
 </script>
 </body>
 </html>
+
+
 
 
 
